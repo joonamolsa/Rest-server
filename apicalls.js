@@ -8,6 +8,7 @@ import YAML from "yamljs";
 import index from "./api/index.js";
 import data from "./api/data.js";
 import login from "./api/login.js";
+console.log("🧠 login-moduuli:", login);
 
 const swaggerDocument = YAML.load("./openapi/api.yaml");
 const app = express();
