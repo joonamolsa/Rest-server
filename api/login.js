@@ -24,4 +24,8 @@ router.post("/", async (req, res) => {
   } else res.status(401).json({ error: "Login failed" });
 });
 
+console.log(
+  "🧠 login.js reitit:",
+  router.stack.map((r) => r.route?.path)
+);
 export default router;
