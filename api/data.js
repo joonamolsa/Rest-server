@@ -40,9 +40,9 @@ router.get("/fill", async (req, res) => {
 
 // POST /add-row → kutsuu addDataRow-proseduuria
 router.post("/add-row", async (req, res) => {
-  const { Firstname, Surname, userid } = req.body;
+  const { Firstname, Surname } = req.body;
   try {
-    const result = await callAddDataRow(Firstname, Surname, userid);
+    const result = await callAddDataRow(Firstname, Surname);
     res.json({ success: true, result });
   } catch (e) {
     res.status(500).json({ error: e.message });
