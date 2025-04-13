@@ -55,7 +55,7 @@ router.post("/add-row", async (req, res) => {
 router.post("/add-data", async (req, res) => {
   const { Firstname, Surname } = req.body;
   try {
-    const result = await callAddData(Firstname, Surname);
+    const result = await callAddData(Firstname, Surname); // Kutsutaan proseduuria
     res.json({ success: true, result });
   } catch (e) {
     res.status(500).json({ error: e.message });
