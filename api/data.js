@@ -56,7 +56,8 @@ router.post("/add-data", async (req, res) => {
   const { Firstname, Surname } = req.body;
   try {
     const result = await callAddData(Firstname, Surname); // Kutsutaan proseduuria
-    res.json({ success: true, result });
+    console.log("callAddData palautti:", result);
+    res.json({ success: true, result: result || "no result" });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
