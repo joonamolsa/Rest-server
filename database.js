@@ -53,8 +53,9 @@ const callFillData = async () => sendQuery(`CALL fillData()`, true);
 const callAddDataRow = async (firstname, surname, userid) =>
   sendQuery(`CALL addDataRow(?, ?, ?)`, true, firstname, surname, userid);
 
-const callAddData = async (id, firstname, surname, userid) =>
-  sendQuery(`CALL addData(?, ?, ?, ?)`, true, id, firstname, surname, userid);
+const callAddData = async (firstname, surname) =>
+  sendQuery(`CALL addData(?, ?)`, true, firstname, surname);
+
 /*
 const getUserByName = (username) => 
     sendQuery(`SELECT * FROM users WHERE username = ?`, false, username);

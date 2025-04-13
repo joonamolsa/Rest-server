@@ -51,9 +51,9 @@ router.post("/add-row", async (req, res) => {
 
 // POST /add-data → kutsuu addData-proseduuria
 router.post("/add-data", async (req, res) => {
-  const { id, Firstname, Surname, userid } = req.body;
+  const { Firstname, Surname } = req.body;
   try {
-    const result = await callAddData(id, Firstname, Surname, userid);
+    const result = await callAddData(Firstname, Surname);
     res.json({ success: true, result });
   } catch (e) {
     res.status(500).json({ error: e.message });
