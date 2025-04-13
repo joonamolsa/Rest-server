@@ -10,6 +10,10 @@ const pool = createPool({
   password: "Salasana1",
   // database: "adbms",
   database: "testi",
+
+  // ✅ Korjaa JSON-serialisoinnin BigInt-virheen
+  insertIdAsNumber: true,
+  bigIntAsNumber: true,
 });
 
 export default Object.freeze({
