@@ -48,12 +48,15 @@ const addData = ({ id, Firstname, Surname, userid }) =>
     userid
   );
 
+// Kutsuu fillData-proseduuria, joka lisää annetun määrän satunnaisia rivejä data-tauluun.
 const callFillData = async (count) =>
   sendQuery(`CALL fillData(?)`, true, count);
 
+// Kutsuu addDataRow-proseduuria, joka lisää yhden rivin data-tauluun annetulla etunimellä, sukunimellä ja käyttäjätunnuksella.
 const callAddDataRow = async (firstname, surname, userid) =>
   sendQuery(`CALL addDataRow(?, ?, ?)`, true, firstname, surname, userid);
 
+// Kutsuu addData-proseduuria, joka lisää yhden rivin data-tauluun annetulla etunimellä, sukunimellä ja satunnaisella käyttäjätunnuksella.
 const callAddData = async (firstname, surname) =>
   sendQuery(`CALL addData(?, ?)`, true, firstname, surname);
 
