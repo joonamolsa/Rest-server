@@ -51,8 +51,8 @@ const addData = ({ id, Firstname, Surname, userid }) =>
 const callFillData = async (count) =>
   sendQuery(`CALL fillData(?)`, true, count);
 
-const callAddDataRow = async (firstname, surname) =>
-  sendQuery(`CALL addDataRow(?, ?)`, true, firstname, surname);
+const callAddDataRow = async (firstname, surname, userid) =>
+  sendQuery(`CALL addDataRow(?, ?, ?)`, true, firstname, surname, userid);
 
 const callAddData = async (firstname, surname) =>
   sendQuery(`CALL addData(?, ?)`, true, firstname, surname);

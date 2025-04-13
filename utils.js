@@ -13,13 +13,20 @@ const verifyToken = (req, res, next) => {
       if (isValid) {
         const user = logonUsers.get(decodedToken.username);
         if (user.token === token) {
+          req.user = user;
           next();
-        } else res.status(401).json({ error: "Unauthorized" });
-      } else res.status(401).json({ error: "Invalid token" });
+        } else {
+          res.status(401).json({ error: "Unauthorized" });
+        }
+      } else {
+        res.status(401).json({ error: "Invalid token" });
+      }
     } catch (err) {
       res.status(401).json({ error: "Invalid token" });
     }
-  } else res.status(401).json({ error: "Invalid token" });
+  } else {
+    res.status(401).json({ error: "Invalid token" });
+  }
 };
 
 export { verifyToken };
