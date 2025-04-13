@@ -28,11 +28,12 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET /fill → kutsuu fillData-proseduuria
-router.get("/fill", async (req, res) => {
+// POST /fill → lisää satunnaista dataa annetun määrän verran
+router.post("/fill", async (req, res) => {
+  const { count } = req.body;
   try {
-    const result = await callFillData();
-    res.json(result);
+    const result = await callFillData(count);
+    res.json({ success: true, result });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

@@ -48,7 +48,8 @@ const addData = ({ id, Firstname, Surname, userid }) =>
     userid
   );
 
-const callFillData = async () => sendQuery(`CALL fillData()`, true);
+const callFillData = async (count) =>
+  sendQuery(`CALL fillData(?)`, true, count);
 
 const callAddDataRow = async (firstname, surname, userid) =>
   sendQuery(`CALL addDataRow(?, ?, ?)`, true, firstname, surname, userid);
