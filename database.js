@@ -48,6 +48,13 @@ const addData = ({ id, Firstname, Surname, userid }) =>
     userid
   );
 
+const callFillData = async () => sendQuery(`CALL fillData()`, true);
+
+const callAddDataRow = async (firstname, surname, userid) =>
+  sendQuery(`CALL addDataRow(?, ?, ?)`, true, firstname, surname, userid);
+
+const callAddData = async (id, firstname, surname, userid) =>
+  sendQuery(`CALL addData(?, ?, ?, ?)`, true, id, firstname, surname, userid);
 /*
 const getUserByName = (username) => 
     sendQuery(`SELECT * FROM users WHERE username = ?`, false, username);
@@ -63,6 +70,9 @@ export {
   getDataById,
   addData,
   logonUsers,
+  callFillData,
+  callAddDataRow,
+  callAddData,
   //    getUserByName,
   //    deleteData,
 };

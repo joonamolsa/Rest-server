@@ -1,5 +1,12 @@
 import { Router } from "express";
-import { getAllData, getDataById, addData } from "../database.js";
+import {
+  getAllData,
+  getDataById,
+  addData,
+  callFillData,
+  callAddDataRow,
+  callAddData,
+} from "../database.js";
 let router = Router();
 
 router.get("/", async (req, res) => {
@@ -18,6 +25,38 @@ router.post("/", async (req, res) => {
     let result = await addData(req.body);
     if (result.affectedRows) res.json(req.body);
     else res.status(500).json({ error: "unknown database error" });
+  }
+});
+
+// GET /fill → kutsuu fillData-proseduuria
+router.get("/fill", async (req, res) => {
+  try {
+    const result = await callFillData();
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /add-row → kutsuu addDataRow-proseduuria
+router.post("/add-row", async (req, res) => {
+  const { Firstname, Surname, userid } = req.body;
+  try {
+    const result = await callAddDataRow(Firstname, Surname, userid);
+    res.json({ success: true, result });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /add-data → kutsuu addData-proseduuria
+router.post("/add-data", async (req, res) => {
+  const { id, Firstname, Surname, userid } = req.body;
+  try {
+    const result = await callAddData(id, Firstname, Surname, userid);
+    res.json({ success: true, result });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 });
 
