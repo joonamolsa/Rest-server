@@ -1,76 +1,75 @@
-import poolObj from "./dbPool.js";
-const { pool } = poolObj;
+import { getCollection, ObjectId } from "./mongodb.js";
 
-let logonUsers = new Map();
+const logonUsers = new Map();
 
-const sendQuery = async (sql, doCommit, ...params) => {
-  let conn, result;
-  try {
-    conn = await pool.getConnection();
-    result = await conn.query(sql, params);
-    if (doCommit) {
-      await conn.query("COMMIT");
-    }
-  } catch (err) {
-    result = err;
-    throw err;
-  } finally {
-    if (conn) conn.end();
-    return result;
-  }
+const findOneUser = async (username) => {
+  const users = getCollection("users");
+  return await users.findOne(
+    { username },
+    { projection: { username: 1, password: 1, _id: 0 } }
+  );
 };
 
-const findOneUser = async (username) =>
-  sendQuery(`SELECT * FROM users WHERE username = ?`, true, username);
+const getAllUsers = async () => {
+  const users = getCollection("users");
+  return await users.find({}).toArray();
+};
 
-const getAllData = async () => sendQuery(`SELECT * FROM data`);
+const addOneUser = async (username, password) => {
+  const users = getCollection("users");
+  return await users.insertOne({ username, password });
+};
 
-const getDataById = async (id) =>
-  sendQuery(`SELECT * FROM data WHERE data.id = ?`, false, id);
+const getAllData = async () => {
+  const data = getCollection("data");
+  return await data.find({}).toArray();
+};
 
-const getAllUsers = async () => sendQuery(`SELECT * FROM users`);
+const getDataById = async (id) => {
+  const data = getCollection("data");
+  return await data.findOne({ _id: new ObjectId(id) });
+};
 
-const addOneUser = async (username, password) =>
-  sendQuery(
-    `INSERT INTO users (username, password) VALUES (?, ?)`,
-    false,
-    username,
-    password
-  );
+const addData = async ({ Firstname, Surname, userid }) => {
+  const data = getCollection("data");
+  return await data.insertOne({ Firstname, Surname, userid });
+};
 
-const addData = ({ id, Firstname, Surname, userid }) =>
-  sendQuery(
-    `INSERT INTO data (id, Firstname, Surname, userid) VALUES (?, ?, ?, ?)`,
-    true,
-    id,
-    Firstname,
-    Surname,
-    userid
-  );
+const callFillData = async (count) => {
+  const data = getCollection("data");
+  const mock = [];
+  for (let i = 0; i < count; i++) {
+    mock.push({
+      Firstname: `Etunimi${i}`,
+      Surname: `Sukunimi${i}`,
+      userid: "mockuser",
+    });
+  }
+  return await data.insertMany(mock);
+};
 
-// Kutsuu fillData-proseduuria, joka lisää annetun määrän satunnaisia rivejä data-tauluun.
-const callFillData = async (count) =>
-  sendQuery(`CALL fillData(?)`, true, count);
+const callAddDataRow = async (firstname, surname, userid) => {
+  const data = getCollection("data");
+  return await data.insertOne({
+    Firstname: firstname,
+    Surname: surname,
+    userid,
+  });
+};
 
-// Kutsuu addDataRow-proseduuria, joka lisää yhden rivin data-tauluun annetulla etunimellä, sukunimellä ja käyttäjätunnuksella.
-const callAddDataRow = async (firstname, surname, userid) =>
-  sendQuery(`CALL addDataRow(?, ?, ?)`, true, firstname, surname, userid);
+const callAddData = async (firstname, surname) => {
+  const data = getCollection("data");
+  return await data.insertOne({
+    Firstname: firstname,
+    Surname: surname,
+    userid: "mockuser",
+  });
+};
 
-// Kutsuu addData-proseduuria, joka lisää yhden rivin data-tauluun annetulla etunimellä, sukunimellä ja satunnaisella käyttäjätunnuksella.
-const callAddData = async (firstname, surname) =>
-  sendQuery(`CALL addData(?, ?)`, true, firstname, surname);
-
-/*
-const getUserByName = (username) => 
-    sendQuery(`SELECT * FROM users WHERE username = ?`, false, username);
-
-const deleteData = (id, userid) =>
-    sendQuery(`DELETE FROM data WHERE id = ? AND userid = ?`, true, id, userid);
-*/
 export {
-  addOneUser,
-  getAllUsers,
   findOneUser,
+  getAllUsers,
+  addOneUser,
   getAllData,
   getDataById,
   addData,
@@ -78,6 +77,4 @@ export {
   callFillData,
   callAddDataRow,
   callAddData,
-  //    getUserByName,
-  //    deleteData,
 };

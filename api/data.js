@@ -7,56 +7,74 @@ import {
   callAddDataRow,
   callAddData,
 } from "../database.js";
+
 let router = Router();
 
+// GET /data → kaikki tiedot
 router.get("/", async (req, res) => {
-  res.json(await getAllData());
-});
-
-router.get("/:id", async (req, res) => {
-  res.json(await getDataById(req.params.id));
-});
-
-router.post("/", async (req, res) => {
-  let exist = await getDataById(req.body.id);
-  if (exist[0]) {
-    res.status(409).json({ error: "record already exists" });
-  } else {
-    let result = await addData(req.body);
-    if (result.affectedRows) res.json(req.body);
-    else res.status(500).json({ error: "unknown database error" });
+  try {
+    const data = await getAllData();
+    res.json(data);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 });
 
-// POST /fill -> lisää satunnaista dataa annetun määrän verran
+// GET /data/:id → yksi tietue
+router.get("/:id", async (req, res) => {
+  try {
+    const data = await getDataById(req.params.id);
+    if (!data) return res.status(404).json({ error: "Not found" });
+    res.json(data);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /data → lisää uusi tietue
+router.post("/", async (req, res) => {
+  try {
+    const exist = await getDataById(req.body.id);
+    if (exist) {
+      res.status(409).json({ error: "Record already exists" });
+    } else {
+      const result = await addData(req.body);
+      res.json({ success: true, insertedId: result.insertedId });
+    }
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /data/fill → lisää mock-dataa määrän verran
 router.post("/fill", async (req, res) => {
   const { count } = req.body;
   try {
     const result = await callFillData(count);
-    res.json({ success: true, result });
+    res.json({ success: true, insertedCount: result.insertedCount });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
-// POST /add-row -> kutsuu addDataRow-proseduuria
+// POST /data/add-row → lisää yksi tietue kirjautuneelle käyttäjälle
 router.post("/add-row", async (req, res) => {
   const { Firstname, Surname } = req.body;
-  const userid = req.user.username; // Ottaa kirjautuneen käyttäjän ID
+  const userid = req.user.username; // kirjautuneen käyttäjän tunnus
   try {
     const result = await callAddDataRow(Firstname, Surname, userid);
-    res.json({ success: true, result });
+    res.json({ success: true, insertedId: result.insertedId });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
-// POST /add-data -> kutsuu addData-proseduuria
+// POST /data/add-data → lisää yksi tietue satunnaiskäyttäjälle
 router.post("/add-data", async (req, res) => {
   const { Firstname, Surname } = req.body;
   try {
     const result = await callAddData(Firstname, Surname);
-    res.json({ success: true, result });
+    res.json({ success: true, insertedId: result.insertedId });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

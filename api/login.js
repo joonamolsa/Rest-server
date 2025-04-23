@@ -7,13 +7,13 @@ router.post("/", async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await findOneUser(username);
-    if (!user[0]) return res.status(401).json({ error: "User not found" });
+    if (!user) return res.status(401).json({ error: "User not found" });
 
-    if (user[0].password === password) {
+    if (user.password === password) {
       const token = jwt.sign({ username }, "my_secret_key", {
         expiresIn: "1d",
       });
-      logonUsers.set(username, { ...user[0], token });
+      logonUsers.set(username, { ...user, token });
       res.json({
         username,
         access_token: token,
