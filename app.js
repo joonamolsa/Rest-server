@@ -1,5 +1,14 @@
-import app from './apicalls.js';
+import app from "./apicalls.js";
+import { openDbConn } from "./mongodb.js";
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000 ..')
-});
+(async () => {
+  try {
+    await openDbConn();
+    app.listen(3000, () => {
+      console.log("✅ Mongo-yhteys auki — kuuntelen porttia 3000");
+    });
+  } catch (err) {
+    console.error("❌ MongoDB-yhteyden avaaminen epäonnistui:", err);
+    process.exit(1);
+  }
+})();
