@@ -1,39 +1,23 @@
+console.log("Lataa database.js");
+
 import { getCollection, ObjectId } from "./mongodb.js";
 
-const logonUsers = new Map();
+export const findOneUser = async (username) =>
+  getCollection("users").findOne({ username });
 
-const findOneUser = async (username) => {
-  const users = getCollection("users");
-  return await users.findOne(
-    { username },
-    { projection: { username: 1, password: 1, _id: 0 } }
-  );
-};
+export const getAllUsers = async () =>
+  getCollection("users").find({}).toArray();
 
-const getAllUsers = async () => {
-  const users = getCollection("users");
-  return await users.find({}).toArray();
-};
+export const addOneUser = async (username, password) =>
+  getCollection("users").insertOne({ username, password });
 
-const addOneUser = async (username, password) => {
-  const users = getCollection("users");
-  return await users.insertOne({ username, password });
-};
+export const getAllData = async () => getCollection("data").find({}).toArray();
 
-const getAllData = async () => {
-  const data = getCollection("data");
-  return await data.find({}).toArray();
-};
+export const getDataById = async (id) =>
+  getCollection("data").findOne({ _id: new ObjectId(id) });
 
-const getDataById = async (id) => {
-  const data = getCollection("data");
-  return await data.findOne({ _id: new ObjectId(id) });
-};
-
-const addData = async ({ Firstname, Surname, userid }) => {
-  const data = getCollection("data");
-  return await data.insertOne({ Firstname, Surname, userid });
-};
+export const addData = async ({ Firstname, Surname, userid }) =>
+  getCollection("data").insertOne({ Firstname, Surname, userid });
 
 const callFillData = async (count) => {
   const data = getCollection("data");
@@ -73,7 +57,6 @@ export {
   getAllData,
   getDataById,
   addData,
-  logonUsers,
   callFillData,
   callAddDataRow,
   callAddData,
