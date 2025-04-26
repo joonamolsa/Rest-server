@@ -2,21 +2,20 @@ console.log("Lataa database.js");
 
 import { getCollection, ObjectId } from "./mongodb.js";
 
-export const findOneUser = async (username) =>
+const findOneUser = async (username) =>
   getCollection("users").findOne({ username });
 
-export const getAllUsers = async () =>
-  getCollection("users").find({}).toArray();
+const getAllUsers = async () => getCollection("users").find({}).toArray();
 
-export const addOneUser = async (username, password) =>
+const addOneUser = async (username, password) =>
   getCollection("users").insertOne({ username, password });
 
-export const getAllData = async () => getCollection("data").find({}).toArray();
+const getAllData = async () => getCollection("data").find({}).toArray();
 
-export const getDataById = async (id) =>
+const getDataById = async (id) =>
   getCollection("data").findOne({ _id: new ObjectId(id) });
 
-export const addData = async ({ Firstname, Surname, userid }) =>
+const addData = async ({ Firstname, Surname, userid }) =>
   getCollection("data").insertOne({ Firstname, Surname, userid });
 
 const callFillData = async (count) => {
