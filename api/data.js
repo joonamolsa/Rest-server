@@ -4,6 +4,7 @@ import {
   getAllData,
   getDataById,
   addData,
+  findDataByFirstname,
   callFillData,
   callAddDataRow,
   callAddData,
@@ -32,6 +33,17 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// POST /data/search
+router.post("/search", async (req, res) => {
+  const { firstname } = req.body;
+  try {
+    const docs = await findDataByFirstname(firstname);
+    res.json(docs);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // POST /data → lisää uusi tietue
 router.post("/", async (req, res) => {
   try {
@@ -50,7 +62,7 @@ router.post("/", async (req, res) => {
 // POST /data/fill → lisää mock-dataa määrän verran
 router.post("/fill", async (req, res) => {
   const { count } = req.body;
-  const userid = req.user.username; // middleware verifyToken on asettanut tämän
+  const userid = req.user.username; // kirjautuneen käyttäjän tunnus
 
   try {
     const result = await callFillData(count, userid);
