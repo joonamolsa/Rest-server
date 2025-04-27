@@ -72,6 +72,7 @@ const findDataByFirstname = async (firstname) => {
     .toArray();
 };
 
+// Tehtävä 11 Mongo-kysely REST-ohjelmaan
 const getUserRecordCounts = async () =>
   getCollection("users")
     .aggregate([
