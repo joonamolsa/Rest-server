@@ -61,7 +61,12 @@ const callAddData = async (firstname, surname) => {
 };
 
 const findDataByFirstname = async (firstname) => {
-  getCollection("data").find({ Firstname: firstname }).toArray();
+  return getCollection("data")
+    .find(
+      { Firstname: firstname },
+      { projection: { Firstname: 1, Surname: 1, _id: 0 } }
+    )
+    .toArray();
 };
 
 export {
