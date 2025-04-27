@@ -6,6 +6,7 @@ import YAML from "yamljs";
 import index from "./api/index.js";
 import data from "./api/data.js";
 import login from "./api/login.js";
+import users from "./api/users.js";
 
 const swaggerDocument = YAML.load("./openapi/api.yaml");
 const app = express();
@@ -17,5 +18,6 @@ app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/", index);
 app.use("/data", verifyToken, data);
 app.use("/login", login);
+app.use("/users", users);
 
 export default app;

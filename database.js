@@ -72,6 +72,23 @@ const findDataByFirstname = async (firstname) => {
     .toArray();
 };
 
+const getUserRecordCounts = async () =>
+  getCollection("users")
+    .aggregate([
+      {
+        $lookup: {
+          from: "data",
+          localField: "username",
+          foreignField: "userid",
+          as: "records",
+        },
+      },
+      {
+        $project: { _id: 0, username: 1, usersRecords: { $size: "$records" } },
+      },
+    ])
+    .toArray();
+
 export {
   findOneUser,
   getAllUsers,
@@ -84,4 +101,5 @@ export {
   callAddDataRow,
   callAddData,
   findDataByFirstname,
+  getUserRecordCounts,
 };
