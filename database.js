@@ -60,7 +60,7 @@ const callAddData = async (firstname, surname) => {
   });
 };
 
-const findDataByFistname = async (firstname) => {
+const findDataByFirstname = async (firstname) => {
   getCollection("data").find({ Firstname: firstname }).toArray();
 };
 
@@ -74,5 +74,5 @@ export {
   callFillData,
   callAddDataRow,
   callAddData,
-  findDataByFistname,
+  findDataByFirstname,
 };
