@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   getAllData,
   getDataById,
+  findDataByUser,
   addData,
   findDataByFirstname,
   callFillData,
@@ -28,6 +29,16 @@ router.get("/:id", async (req, res) => {
     const data = await getDataById(req.params.id);
     if (!data) return res.status(404).json({ error: "Not found" });
     res.json(data);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET /data/find → hae kaikki datat juuri kirjautuneelta käyttäjältä
+router.get("/find", async (req, res) => {
+  try {
+    const docs = await findDataByUser(username);
+    res.json(docs);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

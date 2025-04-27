@@ -15,6 +15,9 @@ const getAllData = async () => getCollection("data").find({}).toArray();
 const getDataById = async (id) =>
   getCollection("data").findOne({ _id: new ObjectId(id) });
 
+const findDataByUser = async (userid) =>
+  getCollection("data").find({ userid }).toArray();
+
 const addData = async ({ Firstname, Surname, userid }) =>
   getCollection("data").insertOne({ Firstname, Surname, userid });
 
@@ -75,6 +78,7 @@ export {
   addOneUser,
   getAllData,
   getDataById,
+  findDataByUser,
   addData,
   callFillData,
   callAddDataRow,
