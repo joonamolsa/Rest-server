@@ -34,8 +34,14 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST /data/find → hae kaikki datat juuri kirjautuneelta käyttäjältä
+// POST /data/find → hae kaikki datat tietyltä käyttäjältä
 router.post("/find", async (req, res) => {
+  const { username } = req.body;
+  if (!username) {
+    return res
+      .status(400)
+      .json({ error: "Missing `username` in request body" });
+  }
   try {
     const docs = await findDataByUser(username);
     res.json(docs);
