@@ -34,8 +34,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// GET /data/find → hae kaikki datat juuri kirjautuneelta käyttäjältä
-router.get("/find", async (req, res) => {
+// POST /data/find → hae kaikki datat juuri kirjautuneelta käyttäjältä
+router.post("/find", async (req, res) => {
   try {
     const docs = await findDataByUser(username);
     res.json(docs);
