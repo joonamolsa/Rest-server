@@ -16,14 +16,14 @@ router.post("/", async (req, res) => {
     const token = jwt.sign(
       { sub: user._id.toString(), username: user.username },
       process.env.JWT_SECRET || "my_secret_key",
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
 
     return res.json({
       username: user.username,
       access_token: token,
       token_type: "Bearer",
-      expires_in: 3600,
+      expires_in: 86400,
     });
   }
 

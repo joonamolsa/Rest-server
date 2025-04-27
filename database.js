@@ -18,17 +18,28 @@ const getDataById = async (id) =>
 const addData = async ({ Firstname, Surname, userid }) =>
   getCollection("data").insertOne({ Firstname, Surname, userid });
 
-const callFillData = async (count) => {
-  const data = getCollection("data");
-  const mock = [];
-  for (let i = 0; i < count; i++) {
-    mock.push({
-      Firstname: `Etunimi${i}`,
-      Surname: `Sukunimi${i}`,
-      userid: "mockuser",
-    });
+const callFillData = async (count, userid) => {
+  const dataCol = getCollection("data");
+  // Hae olemassaolevat etu- ja sukunimet
+  const allDocs = await dataCol
+    .find({}, { projection: { Firstname: 1, Surname: 1 } })
+    .toArray();
+
+  if (allDocs.length === 0) {
+    throw new Error("Ei tarpeeksi dataa mock-generointiin");
   }
-  return await data.insertMany(mock);
+
+  const firstNames = allDocs.map((d) => d.Firstname);
+  const lastNames = allDocs.map((d) => d.Surname);
+
+  // Generoi mock-dokumentit
+  const mockDocs = Array.from({ length: count }, () => ({
+    Firstname: firstNames[Math.floor(Math.random() * firstNames.length)],
+    Surname: lastNames[Math.floor(Math.random() * lastNames.length)],
+    userid,
+  }));
+
+  return dataCol.insertMany(mockDocs);
 };
 
 const callAddDataRow = async (firstname, surname, userid) => {

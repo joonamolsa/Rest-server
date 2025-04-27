@@ -1,3 +1,4 @@
+console.log("Lataa data.js");
 import { Router } from "express";
 import {
   getAllData,
@@ -49,8 +50,10 @@ router.post("/", async (req, res) => {
 // POST /data/fill → lisää mock-dataa määrän verran
 router.post("/fill", async (req, res) => {
   const { count } = req.body;
+  const userid = req.user.username; // middleware verifyToken on asettanut tämän
+
   try {
-    const result = await callFillData(count);
+    const result = await callFillData(count, userid);
     res.json({ success: true, insertedCount: result.insertedCount });
   } catch (e) {
     res.status(500).json({ error: e.message });

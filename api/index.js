@@ -1,10 +1,11 @@
-import { Router } from 'express';
-let router = Router()
+console.log("Lataa index.js");
+import { Router } from "express";
+let router = Router();
 
-router.get('/', (req, res) => {
-    res.json( {
-        'name': 'home page'
-    })
-})
+router.get("/", (req, res) => {
+  res.json({
+    name: "home page",
+  });
+});
 
 export default router;
