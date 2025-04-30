@@ -8,7 +8,7 @@ const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB;
 
 if (!uri || !dbName) {
-  console.error("❌ Puuttuva MONGODB_URI tai MONGODB_DB ympäristömuuttuja.");
+  console.error("❌ Puuttuu MONGODB_URI tai MONGODB_DB ympäristömuuttuja.");
   process.exit(1);
 }
 
