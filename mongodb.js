@@ -1,37 +1,49 @@
+// Ladataan .env-tiedosto, jotta voimme käyttää ympäristömuuttujia
+import dotenv from "dotenv";
+dotenv.config();
+
 import { MongoClient, ObjectId } from "mongodb";
 
-const dbHost = "localhost:27017";
-const dbUser = "mongoAdmin";
-const dbPassword = "Salasana1";
-const dbName = "testi";
-const destConnString = `mongodb://${dbUser}:${dbPassword}@${dbHost}/?authSource=admin`;
+const uri = process.env.MONGODB_URI;
+const dbName = process.env.MONGODB_DB;
 
-const dbServer = new MongoClient(destConnString);
+if (!uri || !dbName) {
+  console.error("❌ Puuttuva MONGODB_URI tai MONGODB_DB ympäristömuuttuja.");
+  process.exit(1);
+}
+
+const client = new MongoClient(uri);
 let db;
 
-const openDbConn = async () => {
+export const openDbConn = async () => {
   try {
-    await dbServer.connect();
-    db = dbServer.db(dbName);
-    console.log("✅ Yhdistetty MongoDB:hen");
+    await client.connect();
+    db = client.db(dbName);
+    console.log("✅ Yhdistetty MongoDB:hen:", dbName);
   } catch (error) {
     console.error("❌ Yhteysvirhe MongoDB:hen:", error);
     throw error;
   }
 };
 
-const closeDbConnection = async () => {
+export const closeDbConnection = async () => {
   try {
-    await dbServer.close();
+    await client.close();
     console.log("🔒 Yhteys MongoDB:hen suljettu");
   } catch (error) {
     console.error("❌ Sulkeminen epäonnistui", error);
   }
 };
 
-const getCollection = (name) => db.collection(name);
+export const getCollection = (name) => {
+  if (!db)
+    throw new Error(
+      "Tietokantayhteyttä ei ole avattu ennen getCollection-kutsua"
+    );
+  return db.collection(name);
+};
 
 process.on("SIGINT", closeDbConnection);
 process.on("SIGTERM", closeDbConnection);
 
-export { openDbConn, closeDbConnection, getCollection, ObjectId };
+export { ObjectId };
