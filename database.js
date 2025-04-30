@@ -1,14 +1,22 @@
 console.log("Lataa database.js");
 
 import { getCollection, ObjectId } from "./mongodb.js";
+import bcrypt from "bcrypt";
 
 const findOneUser = async (username) =>
   getCollection("users").findOne({ username });
 
 const getAllUsers = async () => getCollection("users").find({}).toArray();
 
-const addOneUser = async (username, password) =>
-  getCollection("users").insertOne({ username, password });
+const addOneUser = async (username, plainPassword) => {
+  // 1) luo hash (suolalla rounds=10)
+  const hash = await bcrypt.hash(plainPassword, 10);
+  // 2) talleta käyttäjä hashattuna salasanana
+  return getCollection("users").insertOne({
+    username,
+    password: hash,
+  });
+};
 
 const getAllData = async () => getCollection("data").find({}).toArray();
 
