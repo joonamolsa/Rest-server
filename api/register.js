@@ -1,4 +1,4 @@
-// api/register.js
+console.log("Lataa register.js");
 import { Router } from "express";
 import { addOneUser, findOneUser } from "../database.js";
 

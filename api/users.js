@@ -1,3 +1,4 @@
+console.log("Lataa users.js");
 import { Router } from "express";
 import { getUserRecordCounts } from "../database.js";
 import { verifyToken } from "../utils.js";
